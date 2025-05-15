@@ -1,7 +1,7 @@
 package com.sobrinho.java_trello_mcp.infra.config;
 
-import com.sobrinho.java_trello_mcp.infra.TrelloClient;
-import com.sobrinho.java_trello_mcp.infra.TrelloTools;
+import com.sobrinho.java_trello_mcp.infra.trello.rest.TrelloClient;
+import com.sobrinho.java_trello_mcp.infra.trello.TrelloTools;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbacks;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 
 @Configuration
-public class BaseConfig {
+public class BaseContext {
 
     @Bean
     public TrelloConfig trelloConfig() {
@@ -27,7 +27,7 @@ public class BaseConfig {
 
     @Bean
     public TrelloTools trelloTools() {
-        return new TrelloTools(trelloClient());
+        return new TrelloTools(trelloClient(), trelloConfig());
     }
 
     @Bean

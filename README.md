@@ -1,51 +1,35 @@
 # Java Trello MCP
 
-A Spring Boot application that provides Trello card creation functionality as a tool for Spring AI Model Composition Platform (MCP).
-
-## Overview
-
-This application allows you to create Trello cards programmatically through a simple Java API. It's designed to be used with Spring AI's Model Composition Platform, enabling AI models to interact with Trello.
-
-The application provides a tool called `java_trello_mcp_create_card` that can be used to create cards on a specific Trello list.
+A Spring Boot application that provides Trello integration as a Model Composition Platform (MCP) tool for Spring AI.
 
 ## Features
 
-- Create Trello cards with a simple API
-- Integration with Spring AI MCP
+- Create and manage Trello cards, lists, and checklists
+- Fully integrated with Spring AI's Model Composition Platform
+- RESTful API with Swagger UI documentation
 - Configurable Trello API credentials
-- Unit tests for all components
 
 ## Prerequisites
 
-- Java 17 or higher
-- Maven
+- Java 24
+- Maven 3.8+
 - Trello account with API access
-
-## Installation
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/java_trello_mcp.git
-   cd java_trello_mcp
-   ```
-
-2. Build the application:
-   ```
-   ./mvnw clean install
-   ```
 
 ## Configuration
 
-The application requires Trello API credentials to be configured. You can set these through environment variables:
+Configure your Trello API credentials using one of these methods:
 
-- `TRELLO_API_KEY` - Your Trello API key
-- `TRELLO_TOKEN` - Your Trello API token
-- `TRELLO_ORGANIZATION_ID` - Your Trello organization ID
-- `TRELLO_BOARD_ID` - Your Trello board ID
-- `TRELLO_BASE_URL` - The Trello API base URL (usually `https://api.trello.com/1`)
+### Environment Variables
+```bash
+export TRELLO_API_KEY=your_api_key
+export TRELLO_TOKEN=your_token
+export TRELLO_ORGANIZATION_ID=your_organization_id
+export TRELLO_BOARD_ID=your_board_id
+export TRELLO_BASE_URL=https://api.trello.com/1
+```
 
-Alternatively, you can set these values in the `application.yml` file:
-
+### Application Properties
+Edit `src/main/resources/application.yml`:
 ```yaml
 trello_config:
   api_key: your_api_key
@@ -55,71 +39,73 @@ trello_config:
   base_url: https://api.trello.com/1
 ```
 
-## Usage
+## Running the MCP
 
-### As a Spring Bean
+1. Build the application:
+   ```bash
+   ./mvnw clean package
+   ```
 
-You can use the `TrelloTools` class directly in your Spring application:
+2. Run the application:
+   ```bash
+   java -jar target/java_trello_mcp-0.0.1-SNAPSHOT.jar
+   ```
 
-```java
-@Autowired
-private TrelloTools trelloTools;
+   Or with Maven:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
-public void createTrelloCard() {
-    String result = trelloTools.createCard("My new card");
-    System.out.println(result); // Outputs: "Card created"
+3. The MCP server will start on port 8080
+
+## API Documentation
+
+Access Swagger UI documentation at:
+```
+http://localhost:8080/swagger-ui.html
+```
+
+## Available MCP Tools
+
+The following Trello tools are available for Spring AI:
+
+- `create_card` - Create a new Trello card in a specific list
+- `create_list` - Create a new list on a Trello board
+- `get_lists` - Get all lists from a Trello board
+- `get_cards` - Get all cards from a specific list
+- `get_checklists` - Get all checklists from a specific card
+- `create_checklist` - Create a new checklist for a card
+- `create_check_item` - Create a new item in a checklist
+- `delete_card` - Delete a specific card
+- `delete_checklist` - Delete a specific checklist
+- `delete_check_item` - Delete a specific checklist item
+- `archive_list` - Archive a specific list
+
+## MCP Client Configuration
+
+To configure an AI platform (like Claude, Cursor, or others) to use this MCP server, add the following configuration to your MCP client setup:
+
+```json
+{
+  "mcpServers": {
+    "mcp-trello": {
+      "command": "java",
+      "args": [
+        "-jar", "C:\\Users\\your_username\\path\\to\\java_trello_mcp-0.0.1-SNAPSHOT.jar"
+      ],
+      "env": {
+        "TRELLO_API_KEY": "your_api_key",
+        "TRELLO_TOKEN": "your_token",
+        "TRELLO_ORGANIZATION_ID": "your_org_id",
+        "TRELLO_BOARD_ID": "your_board_id",
+        "TRELLO_BASE_URL": "https://api.trello.com/1"
+      }
+    }
+  }
 }
 ```
 
-### As a Spring AI Tool
-
-The application registers the `TrelloTools` class as a Spring AI tool. You can use it in your Spring AI application:
-
-```java
-@Autowired
-private ToolCallbacks toolCallbacks;
-
-public void useAiTool() {
-    // This would be called by the AI system
-    ToolCallback trelloTool = toolCallbacks.stream()
-        .filter(tc -> tc.getName().equals("java_trello_mcp_create_card"))
-        .findFirst()
-        .orElseThrow();
-    
-    String result = (String) trelloTool.call("My AI-created card");
-    System.out.println(result); // Outputs: "Card created"
-}
-```
-
-## Project Structure
-
-- `TrelloCard` - Data model representing a Trello card
-- `TrelloCardRequest` - Request object for creating a Trello card
-- `TrelloClient` - Client for interacting with the Trello API
-- `TrelloTools` - Service that provides the Trello functionality as a tool
-- `TrelloConfig` - Configuration for Trello API credentials
-- `BaseConfig` - Spring configuration for setting up the beans
-
-## Testing
-
-The application includes unit tests for all components. You can run the tests with:
-
-```
-./mvnw test
-```
-
-The tests use mocks to avoid making actual API calls to Trello.
-
-## License
-
-[Add your license information here]
-
-## Contributing
-
-[Add contribution guidelines here]
-
-## Acknowledgements
-
-- [Spring Boot](https://spring.io/projects/spring-boot)
-- [Spring AI](https://spring.io/projects/spring-ai)
-- [Trello API](https://developer.atlassian.com/cloud/trello/rest/api-group-actions/)
+Make sure to:
+1. Update the jar path to match your local environment
+2. Replace the environment variables with your actual Trello credentials
+3. Configure this in your AI platform's MCP settings

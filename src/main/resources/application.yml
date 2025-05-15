@@ -1,18 +1,27 @@
 spring:
   application:
     name: java_trello_mcp
-  main:
-    web-application-type: none
-    banner-mode: off
   ai:
     mcp:
       server:
         name: java-trello-mcp
         version: 0.0.1
+  main:
+    web-application-type: none
+    banner-mode: off
+
+server:
+  servlet:
+    context-path: /
+  port: 8080
 
 logging:
   pattern:
     console:
+#    console: %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+#  level:
+#    com:
+#      sobrinho: INFO
 
 trello_config:
   api_key: ${TRELLO_API_KEY:not_defined}
@@ -20,3 +29,9 @@ trello_config:
   organization_id: ${TRELLO_ORGANIZATION_ID:not_defined}
   board_id: ${TRELLO_BOARD_ID:not_defined}
   base_url: ${TRELLO_BASE_URL:not_defined}
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method

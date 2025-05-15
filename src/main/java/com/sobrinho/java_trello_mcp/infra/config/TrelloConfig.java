@@ -1,7 +1,9 @@
 package com.sobrinho.java_trello_mcp.infra.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class TrelloConfig {
 
     @Value("${trello_config.base_url}")

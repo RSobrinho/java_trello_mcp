@@ -1,0 +1,6 @@
+trello_config:
+  api_key: ${TRELLO_API_KEY:not_defined}
+  token: ${TRELLO_TOKEN:not_defined}
+  organization_id: ${TRELLO_ORGANIZATION_ID:not_defined}
+  board_id: ${TRELLO_BOARD_ID:not_defined}
+  base_url: ${TRELLO_BASE_URL:not_defined}
