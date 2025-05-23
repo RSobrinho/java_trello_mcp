@@ -23,7 +23,7 @@ class TrelloClientTest {
         private final TrelloClient trelloClient = new TrelloClient(restClientFixture.getClient(), trelloConfig);
 
         @Test
-        void createTrelloCard() {
+        void createTrelloCard() { // o problema tá na uri, não no retrieve nem no body
                 TrelloCardRequest request = new TrelloCardRequest("123");
                 TrelloCardResponse expected = new TrelloCardResponse(
                                 "123",
@@ -43,7 +43,8 @@ class TrelloClientTest {
         @Test
         void createTrelloList() {
                 TrelloListRequest request = new TrelloListRequest("Test List");
-                TrelloListResponse expected = new TrelloListResponse("12345", "Test List", null, null, null, null);
+                TrelloListResponse expected = new TrelloListResponse("12345", "Test List",
+                                null, null, null, null);
                 String uri = "/lists?" + defaultQueryParams() + "&" +
                                 name(request.name()) + "&" + idBoardQueryParam(trelloConfig.boardId());
                 restClientFixture.whenPostThenReturn(uri, Optional.empty(), TrelloListResponse.class, expected);

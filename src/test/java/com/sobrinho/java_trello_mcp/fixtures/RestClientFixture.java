@@ -6,6 +6,7 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,12 +41,13 @@ public class RestClientFixture {
 
     public <T, R> void whenPostThenReturn(String uri, Optional<R> requestBody,
             Class<T> responseType, T response) {
-        if (requestBody.isPresent()) {
-            when(requestBodyUriSpec.uri(eq(uri), eq((Object) requestBody.get()))).thenReturn(requestBodySpec);
-        } else {
-            when(requestBodyUriSpec.uri(eq(uri))).thenReturn(requestBodySpec);
-        }
+        when(requestBodyUriSpec.uri(eq(uri))).thenReturn(requestBodySpec);
         when(responseSpec.body(responseType)).thenReturn(response);
+
+        requestBody.ifPresent(r -> {
+            when(requestBodyUriSpec.uri(eq(uri), any(Object[].class))).thenReturn(requestBodySpec);
+            when(requestBodySpec.body(eq(r))).thenReturn(requestBodySpec);
+        });
     }
 
     public <T> void whenGetThenReturn(String uri, Class<T> responseType, T response) {
